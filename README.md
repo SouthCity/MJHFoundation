@@ -1,6 +1,3 @@
 # MJHFoundation
 公司项目自用库
-pod
-pod
-v0.0.1
-v0.0.1
+![](https://img.shields.io/badge/pod-v0.0.1-blue.svg)
