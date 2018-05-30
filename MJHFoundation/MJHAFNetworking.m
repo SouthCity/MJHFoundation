@@ -65,27 +65,23 @@ static MJHAFNetworking *afnSingleton = nil;
 
     NSURLSessionDataTask *sessionTask =
     
-    
-    
-    
-    
     [self.sessionManager POST:url
                    parameters:parameter
+                     progress:^(NSProgress * _Nonnull uploadProgress) {
+                         
+                     }
                       success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-                          if (success) {
-                              NSDictionary *dic = responseObject ;
-                              if ([self isLogin:dic]) {
-                                  success(task,dic);
-                              }
-
-                          }
-                      }
+                         if (success) {
+                             NSDictionary *dic = responseObject ;
+                             success(task,dic);
+                             
+                         }
+                     }
                       failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-                          if (failure) {
-                              failure(task,error);
-                          }
-    }];
-    
+                         if (failure) {
+                             failure(task,error);
+                         }
+                     }];
     
     return sessionTask;
 }
@@ -107,26 +103,22 @@ static MJHAFNetworking *afnSingleton = nil;
     NSURLSessionDataTask *sessionTask =
     
     
-    
-    
-    
     [self.sessionManager GET:url
                   parameters:parameter
+                    progress:^(NSProgress * _Nonnull downloadProgress) {
+                        
+                    }
                      success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                          if (success) {
-                             
                              NSDictionary *dic = [responseObject jsonValueDecoded];
-                             if ([self isLogin:dic]) {
-                                 success(task,dic);
-                             }
+                             success(task,dic);
                          }
                      }
                      failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                          if (failure) {
                              failure(task,error);
                          }
-    }];
-    
+                     }];
     
     return sessionTask;
 }
@@ -147,29 +139,27 @@ static MJHAFNetworking *afnSingleton = nil;
     
     NSURLSessionDataTask *sessionTask =
     
- 
- 
-    
-    
     [self.sessionManager POST:url
                    parameters:parameter
-    constructingBodyWithBlock:^(id<AFMultipartFormData>     _Nonnull formData) {
-            if (dataProcessing) {
-                dataProcessing(formData);
-            }
+    constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+        if (dataProcessing) {
+            dataProcessing(formData);
         }
+    }
+                     progress:^(NSProgress * _Nonnull uploadProgress) {
+        
+    }
                       success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                           if (success) {
                               success(task,responseObject);
                           }
-                      }
+    }
                       failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
                           if (failure) {
                               failure(task,error);
                           }
     }];
-    
-    
+ 
     
     return sessionTask;
 }
