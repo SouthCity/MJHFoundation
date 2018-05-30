@@ -72,9 +72,15 @@ static MJHAFNetworking *afnSingleton = nil;
                      }
                       success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                          if (success) {
-                             NSDictionary *dic = responseObject ;
-                             success(task,dic);
-                             
+                             NSDictionary *responseData = [self responseDataHandle:responseObject];
+                             if (responseData) {
+                                 success(task,responseData);
+                             }else{
+                                 if (failure) {
+                                     NSError *error = [NSError errorWithDomain:@"com.shs.app" code:-8787 userInfo:@{@"Description":@"request success, but response is nil"}];
+                                     failure(task,error);
+                                 }
+                             }
                          }
                      }
                       failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
@@ -110,8 +116,15 @@ static MJHAFNetworking *afnSingleton = nil;
                     }
                      success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                          if (success) {
-                             NSDictionary *dic = [responseObject jsonValueDecoded];
-                             success(task,dic);
+                             NSDictionary *responseData = [self responseDataHandle:responseObject];
+                             if (responseData) {
+                                 success(task,responseData);
+                             }else{
+                                 if (failure) {
+                                     NSError *error = [NSError errorWithDomain:@"com.shs.app" code:-8787 userInfo:@{@"Description":@"request success, but response is nil"}];
+                                     failure(task,error);
+                                 }
+                             }
                          }
                      }
                      failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
@@ -151,7 +164,15 @@ static MJHAFNetworking *afnSingleton = nil;
     }
                       success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                           if (success) {
-                              success(task,responseObject);
+                              NSDictionary *responseData = [self responseDataHandle:responseObject];
+                              if (responseData) {
+                                  success(task,responseData);
+                              }else{
+                                  if (failure) {
+                                      NSError *error = [NSError errorWithDomain:@"com.shs.app" code:-8787 userInfo:@{@"Description":@"request success, but response is nil"}];
+                                      failure(task,error);
+                                  }
+                              }
                           }
     }
                       failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
@@ -164,6 +185,21 @@ static MJHAFNetworking *afnSingleton = nil;
     return sessionTask;
 }
 
+
+- (NSDictionary *)responseDataHandle:(id)responseObject {
+    NSDictionary *responeDictionary = responseObject ;
+    if ([responseObject isKindOfClass:[NSDictionary class]]) {
+         responeDictionary = responseObject ;
+    }else{
+        NSError *error = nil;
+        id value = [NSJSONSerialization JSONObjectWithData:responseObject options:kNilOptions error:&error];
+        if (error) {
+            NSLog(@"jsonValueDecoded error:%@", error);
+        }
+         responeDictionary = value;
+    }
+    return responeDictionary;
+}
 
 - (void)setCookie:(AFHTTPRequestSerializer *)requestSerializer {
    
