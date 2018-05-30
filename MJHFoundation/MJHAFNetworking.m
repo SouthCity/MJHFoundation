@@ -44,9 +44,7 @@ static MJHAFNetworking *afnSingleton = nil;
     return self;
 }
 
-+ (id)copyWithZone:(struct _NSZone *)zone {
-    return [MJHAFNetworking shareMJHAFNetworking];
-}
+ 
 
 
 
