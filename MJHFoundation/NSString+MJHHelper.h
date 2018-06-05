@@ -35,6 +35,8 @@
 - (BOOL)isValidatePasswordLegal;
 
 - (BOOL)isNumberId;
+//2-20位 字母或数字
+- (BOOL)judgeUserNameWordLegal;
 
 #pragma mark 路径
 

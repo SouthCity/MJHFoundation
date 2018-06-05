@@ -10,8 +10,6 @@
 
 @implementation UIColor (MJHColor)
 
-
- 
 + (UIColor *)colorWithHexString:(NSString *)hexString {
     NSString *cString = [[hexString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] uppercaseString];
     
@@ -45,6 +43,5 @@
                             blue:((float) b / 255.0f)
                            alpha:1.0f];
 }
-
 
 @end

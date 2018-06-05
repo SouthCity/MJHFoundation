@@ -19,7 +19,7 @@
     
 //    [SVProgressHUD setMinimumDismissTimeInterval:SHOW_TIME];
     dispatch_async(dispatch_get_main_queue(), ^{
-        [SVProgressHUD showErrorWithStatus:errorMsg]; 
+        [SVProgressHUD showErrorWithStatus:errorMsg];
     });
 }
 
@@ -28,6 +28,7 @@
     if ([successMsg isNull]) {
         successMsg = @"";
     }
+   
 //    [SVProgressHUD setMinimumDismissTimeInterval:SHOW_TIME];
     dispatch_async(dispatch_get_main_queue(), ^{
         [SVProgressHUD showSuccessWithStatus:successMsg];

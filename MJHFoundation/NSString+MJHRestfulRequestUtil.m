@@ -9,9 +9,13 @@
 #import "NSString+MJHRestfulRequestUtil.h"
 @implementation NSString (MJHRestfulRequestUtil)
 
+- (NSString *)appendParameterUrlForparameterArray:(NSArray *)array {
+    NSMutableArray *muParameterArray = [NSMutableArray arrayWithArray:array];
+    return [NSString stringWithFormat:@"%@/%@",self,[muParameterArray componentsJoinedByString:@"/"]];
+}
 
 - (NSString *)stringToUTF8String {
-    return [self stringByRemovingPercentEncoding];
+    return [self stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
 }
 
 

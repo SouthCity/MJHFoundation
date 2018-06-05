@@ -20,6 +20,7 @@
 #import "NSString+MJHRestfulRequestUtil.h"
 #import "NSString+MJHManipulation.h"
 #import "UIImageView+MJHImageView.h"
+#import "UIView+MJHView.h"
 
 #import "UIButton+MJHButton.h"
 #import "SVProgressHUD+MJHSVProgressHUDUtil.h"

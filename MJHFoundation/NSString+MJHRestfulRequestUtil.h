@@ -11,17 +11,9 @@
 @interface NSString (MJHRestfulRequestUtil)
 
 
-/////未登录状态下
-//- (NSString *)appendParameterUrlForparameterArray:(NSArray *)array;
-//
-//
-//
-/////登录状态下请求
-//- (NSString *)loginStateAppendParameterUrlForparameterArray:(NSArray *)array;
-//
+///拼接url
+- (NSString *)appendParameterUrlForparameterArray:(NSArray *)array;
+
 - (NSString *)stringToUTF8String;
-//
-/////请求获取数据时参数 用户名、code、ko、time、token
-//- (NSString *)getInformationParameter;
 
 @end

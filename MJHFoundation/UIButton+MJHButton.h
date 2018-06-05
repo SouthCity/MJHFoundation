@@ -10,8 +10,7 @@
 
 @interface UIButton (MJHButton)
 
-
-
+ 
 /**
  *  倒计时
  *
@@ -23,6 +22,7 @@
  */
 - (dispatch_source_t)countDown:(NSString *)title
                  countDownTime:(NSInteger)time
+                    resetColor:(UIColor *)color
                          block:(void(^)(void))cancelBlock;
 
 
