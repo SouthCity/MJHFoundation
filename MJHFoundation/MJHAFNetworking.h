@@ -24,6 +24,7 @@ typedef void (^progressBlock)(NSProgress * uploadProgress);
 ///创建SessionManager
 + (MJHAFNetworking *)shareMJHAFNetworking;
 
+
 /**
  *  POST请求
  *

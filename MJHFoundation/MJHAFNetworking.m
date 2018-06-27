@@ -8,6 +8,8 @@
 //
 
 #import "MJHAFNetworking.h"
+#import "NSString+MJHHelper.h"
+
 #define defaultRequestTime  15
 
 static MJHAFNetworking *afnSingleton = nil;
@@ -15,7 +17,7 @@ static MJHAFNetworking *afnSingleton = nil;
 @interface MJHAFNetworking ()
 
 @property (nonatomic, strong) AFHTTPSessionManager *sessionManager;
-
+@property (nonatomic, assign) BOOL isLogin;
 
 @end
 
@@ -72,7 +74,10 @@ static MJHAFNetworking *afnSingleton = nil;
                          if (success) {
                              NSDictionary *responseData = [self responseDataHandle:responseObject];
                              if (responseData) {
-                                 success(task,responseData);
+                                 if ( [self isLogin:responseObject]
+                                     ) {
+                                     success(task,responseData);
+                                 }
                              }else{
                                  if (failure) {
                                      NSError *error = [NSError errorWithDomain:@"com.shs.app" code:-8787 userInfo:@{@"Description":@"request success, but response is nil"}];
@@ -97,7 +102,7 @@ static MJHAFNetworking *afnSingleton = nil;
                          success:(successBlock)success
                          failure:(failureBlock)failure  {
     
-    [self setRequestSerializer:[AFHTTPRequestSerializer serializer]responseSerializer:[AFHTTPResponseSerializer serializer]];
+    [self setRequestSerializer:[AFHTTPRequestSerializer serializer]responseSerializer:[AFJSONResponseSerializer serializer]];
     [self setCookie:self.sessionManager.requestSerializer];
     [self setAcceptableContentTypes];
     [self setRequestTimeoutInterval:time];
@@ -116,7 +121,10 @@ static MJHAFNetworking *afnSingleton = nil;
                          if (success) {
                              NSDictionary *responseData = [self responseDataHandle:responseObject];
                              if (responseData) {
-                                 success(task,responseData);
+                                 if ( [self isLogin:responseObject]
+                                     ) {
+                                     success(task,responseData);
+                                 }
                              }else{
                                  if (failure) {
                                      NSError *error = [NSError errorWithDomain:@"com.shs.app" code:-8787 userInfo:@{@"Description":@"request success, but response is nil"}];
@@ -164,7 +172,10 @@ static MJHAFNetworking *afnSingleton = nil;
                           if (success) {
                               NSDictionary *responseData = [self responseDataHandle:responseObject];
                               if (responseData) {
-                                  success(task,responseData);
+                                  if ( [self isLogin:responseObject]
+                                      ) {
+                                      success(task,responseData);
+                                  }
                               }else{
                                   if (failure) {
                                       NSError *error = [NSError errorWithDomain:@"com.shs.app" code:-8787 userInfo:@{@"Description":@"request success, but response is nil"}];
@@ -186,7 +197,9 @@ static MJHAFNetworking *afnSingleton = nil;
 
 - (NSDictionary *)responseDataHandle:(id)responseObject {
     NSDictionary *responeDictionary = responseObject ;
-    if ([responseObject isKindOfClass:[NSDictionary class]]) {
+    if(!responseObject) {
+        responeDictionary = nil;
+    }else  if ([responseObject isKindOfClass:[NSDictionary class]]) {
          responeDictionary = responseObject ;
     }else{
         NSError *error = nil;
@@ -209,6 +222,18 @@ static MJHAFNetworking *afnSingleton = nil;
             [requestSerializer setValue:[requestCookie objectForKey:@"Cookie"] forHTTPHeaderField:@"Cookie"];
         }
     }
+    NSString *app_Version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+    [requestSerializer setValue:app_Version forHTTPHeaderField:@"version"];
+
+    NSString *phoneType = [NSString iphoneType];
+    [requestSerializer setValue:phoneType forHTTPHeaderField:@"phoneType"];
+    
+    NSString* systemVersion = [[UIDevice currentDevice] systemVersion];
+    [requestSerializer setValue:systemVersion forHTTPHeaderField:@"systemVersion"];
+    
+    NSString *identifierStr = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+    [requestSerializer setValue:identifierStr forHTTPHeaderField:@"UUID"];
+
 }
 
 - (void)setRequestSerializer:(AFHTTPRequestSerializer *)requestType
@@ -219,7 +244,7 @@ static MJHAFNetworking *afnSingleton = nil;
 
 
 - (void)setAcceptableContentTypes {
-     self.sessionManager.responseSerializer.acceptableContentTypes =[NSSet setWithObjects:@"text/html",@"text/plain",@"application/json", nil];
+     self.sessionManager.responseSerializer.acceptableContentTypes =[NSSet setWithObjects:@"text/html",@"text/plain",@"application/json",@"text/json", nil];
 }
 
 - (void)setRequestTimeoutInterval:(NSTimeInterval)time {
@@ -234,5 +259,24 @@ static MJHAFNetworking *afnSingleton = nil;
 }
 
 
+
+- (BOOL)isLogin:(id)tempDictionary {
+    NSDictionary *dictionary;
+    if (!tempDictionary) {
+        dictionary = nil;
+    }
+    else if ([tempDictionary isKindOfClass:[NSDictionary class]]) {
+        dictionary = tempDictionary;
+    }
+    else{
+        dictionary = [NSJSONSerialization JSONObjectWithData:tempDictionary options:NSJSONReadingMutableContainers error:nil];
+    }
+    if (![[dictionary objectForKey:@"retCode"]isEqual:[NSNull null]] &&([[dictionary objectForKey:@"retCode"] isEqualToString:@"5028"] || [[dictionary objectForKey:@"retCode"] isEqualToString:@"5030"] || [[dictionary objectForKey:@"retCode"] isEqualToString:@"5029"])) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"logout" object:[dictionary objectForKey:@"retMsg"]];
+        return NO;
+    }else{
+        return YES;
+    }
+}
 
 @end

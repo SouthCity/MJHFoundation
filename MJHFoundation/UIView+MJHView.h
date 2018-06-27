@@ -12,4 +12,6 @@
 + (UIView *)buildNavTitleView:(NSString *)title;
 + (UIView *)buildNavImageView:(NSString *)imageName;
 
+
+- (void)setBorderWithView:(BOOL)top left:(BOOL)left bottom:(BOOL)bottom right:(BOOL)right borderColor:(UIColor *)color borderWidth:(CGFloat)width isShort:(NSString *)shortBorder;
 @end

@@ -35,9 +35,14 @@
 - (BOOL)isValidatePasswordLegal;
 
 - (BOOL)isNumberId;
-//2-20位 字母或数字
+///2-20位 字母或数字
 - (BOOL)judgeUserNameWordLegal;
-
+///校验身份证号码
+- (BOOL)validateIDCardNumber;
+///从身份证上获取性别
+- (NSString *)getIdentityCardSex;
+//根据身份证号码转换成生日
+- (NSString *)birthdayStrFromIdentityCard;
 #pragma mark 路径
 
 ///在Documents中创建路径
